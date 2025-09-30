@@ -1,5 +1,6 @@
 package edu.js.project.service.impl;
 
+import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.*;
 import edu.js.project.entity.*;
 import edu.js.project.repository.*;
@@ -26,10 +27,12 @@ public class FacultyServiceImpl implements FacultyService {
     private final SubjectRepository subjectRepository;
     private final UnitRepository unitRepository;
     private final ComplainRepository complainRepository;
+    private final NewTeacherRepo newTeacherRepo;
+    private final NewMaterialRepo newMaterialRepo;
 
     public boolean checkFacultyStatus(String facultyId) {
 
-        Teacher teacher = teacherRepository.findByFacultyId(facultyId).orElseThrow(
+        NewTeacher teacher = newTeacherRepo.findByFacultyId(facultyId).orElseThrow(
                 () -> new RuntimeException("Faculty not found")
         );
 
@@ -42,8 +45,9 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public void uploadNews(News news) {
 
+        System.out.println(news.getFacultyId()+"*********************");
         News save = newsRepository.save(news);
-        Teacher faculty = teacherRepository.findByFacultyId(news.getFacultyId()).orElseThrow(
+        NewTeacher faculty = newTeacherRepo.findByFacultyId(news.getFacultyId()).orElseThrow(
                 () -> new RuntimeException("Teacher Not Found")
         );
         save.setTeacher(faculty);
@@ -166,7 +170,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public int totalNumberOfMaterial(String facultyID) {
-        return materialRepository.findMaterial(facultyID).size();
+        return newMaterialRepo.findMaterial(facultyID).size();
     }
 
     @Override
@@ -177,7 +181,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
 
-    private boolean checkStatus(Teacher teacher) {
+    private boolean checkStatus(NewTeacher teacher) {
 
         if (Objects.isNull(teacher.getName()))
             return false;
@@ -195,10 +199,7 @@ public class FacultyServiceImpl implements FacultyService {
             return false;
         if (Objects.isNull(teacher.getPhone()))
             return false;
-        if (Objects.isNull(teacher.getSubject()))
-            return false;
-
-        return true;
+        return Objects.nonNull(teacher.getSubjects());
     }
 
 

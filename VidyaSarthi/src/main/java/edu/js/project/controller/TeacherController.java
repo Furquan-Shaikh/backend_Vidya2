@@ -30,9 +30,17 @@ public class TeacherController {
 
     }
 
+    @GetMapping("/totalModule/{facultyId}")
+    public ResponseEntity<?> getTotalUploadedMaterial(@PathVariable String facultyId){
+
+        return ResponseEntity.ok(service.totalNumberOfMaterial(facultyId));
+
+    }
+
     @PostMapping("/uploadNews&Announcement")
     public ResponseEntity<?> uploadNews(@RequestBody News news){
 
+        System.out.println("************"+news.getFacultyId());
         service.uploadNews(news);
         return ResponseEntity.ok("NewsUploaded");
 
@@ -100,6 +108,7 @@ public class TeacherController {
         return ResponseEntity.ok(facultyInfoByEmail);
 
     }
+
 
 
 }

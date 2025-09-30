@@ -39,6 +39,7 @@ public class NewMaterialController {
             @RequestParam("subjectCode") String subjectCode,
             @RequestParam("facultyId") String facultyId,
             @RequestParam("regulationId") String regulationId,
+            @RequestParam("pdfName") String pdfName,
             @RequestParam("pdf") MultipartFile pdf) {
 
         UploadMaterialDto uploadMaterialDto = new UploadMaterialDto();
@@ -48,6 +49,7 @@ public class NewMaterialController {
                 .facultyId(facultyId)
                 .regulationId(regulationId)
                 .pdf(pdf)
+                .pdfName(pdfName)
                 .build();
 
         service.uploadNotes(dto);
@@ -55,7 +57,7 @@ public class NewMaterialController {
     }
 
     @GetMapping("/getRegulationList")
-    public ResponseEntity<?> getRegulation(){
+    public ResponseEntity<?> getRegulation() {
 
         return ResponseEntity.ok(service.getRegulationList());
 
@@ -66,6 +68,7 @@ public class NewMaterialController {
                                     @RequestParam("subjectCode") String subjectCode,
                                     @RequestParam("facultyId") String facultyId,
                                     @RequestParam("regulationId") String regulationId,
+                                    @RequestParam("pdfName") String pdfName,
                                     @RequestParam("pdf") MultipartFile pdf) {
 
         UploadMaterialDto uploadMaterialDto = new UploadMaterialDto();
@@ -75,8 +78,9 @@ public class NewMaterialController {
                 .facultyId(facultyId)
                 .regulationId(regulationId)
                 .pdf(pdf)
+                .pdfName(pdfName)
                 .build();
-        service.uploadPyq(uploadMaterialDto);
+        service.uploadPyq(dto);
         return ResponseEntity.ok("PYQ Uploaded Api");
 
     }
@@ -86,6 +90,7 @@ public class NewMaterialController {
                                    @RequestParam("subjectCode") String subjectCode,
                                    @RequestParam("facultyId") String facultyId,
                                    @RequestParam("regulationId") String regulationId,
+                                   @RequestParam("pdfName") String pdfName,
                                    @RequestParam("pdf") MultipartFile pdf) {
 
         UploadMaterialDto uploadMaterialDto = new UploadMaterialDto();
@@ -94,10 +99,10 @@ public class NewMaterialController {
                 .subjectCode(subjectCode)
                 .facultyId(facultyId)
                 .regulationId(regulationId)
-
+                .pdfName(pdfName)
                 .pdf(pdf)
                 .build();
-        service.uploadQb(uploadMaterialDto);
+        service.uploadQb(dto);
         return ResponseEntity.ok("QB Uploaded Api");
 
     }
@@ -168,13 +173,23 @@ public class NewMaterialController {
 
     }
 
-    @GetMapping("/getFacultyId")
-    public ResponseEntity<?> getFacultyId(@RequestBody EmailDto dto){
+    @PostMapping("/getFacultyId")
+    public ResponseEntity<?> getFacultyId(@RequestBody EmailDto dto) {
 
         return ResponseEntity.ok(service.getFacultyId(dto));
 
 
     }
+
+    @PostMapping("/faculty/getFacultyDetail")
+    public ResponseEntity<?> getFacultyDetail(@RequestBody EmailDto dto) {
+
+        return ResponseEntity.ok(service.getFacultyDetail(dto));
+
+
+    }
+
+
 
 
 }

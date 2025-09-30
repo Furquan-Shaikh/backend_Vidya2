@@ -55,6 +55,7 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
                 .teacher(faculty)
                 .regulations(regulation)
                 .facultyId(uploadNoteDto.getFacultyId())
+                .pdfFilename(uploadNoteDto.getPdfName())
                 .build();
 
         if (!(uploadNoteDto.getPdf() == null || uploadNoteDto.getPdf().isEmpty()))
@@ -81,6 +82,7 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
                 .teacher(faculty)
                 .regulations(regulation)
                 .materialData(savePdf(uploadNoteDto.getPdf()).getMaterialData())
+                .pdfFilename(uploadNoteDto.getPdfName())
                 .build();
 
         if (!(uploadNoteDto.getPdf() == null || uploadNoteDto.getPdf().isEmpty()))
@@ -92,7 +94,6 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
     @Override
     @Transactional
     public void uploadPyq(UploadMaterialDto uploadNoteDto) {
-
 
         NewTeacher faculty = newTeacherRepo.findByFacultyId(uploadNoteDto.getFacultyId()).orElseThrow(() -> new RuntimeException("Teacher not found"));
         NewRegulation regulation = newRegulationRepo.findByRegulationId(uploadNoteDto.getRegulationId()).orElseThrow(() -> new RuntimeException("Regulation not available"));
@@ -106,6 +107,7 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
                 .facultyId(uploadNoteDto.getFacultyId())
                 .teacher(faculty)
                 .regulations(regulation)
+                .pdfFilename(uploadNoteDto.getPdfName())
                 .materialData(savePdf(uploadNoteDto.getPdf()).getMaterialData())
                 .build();
 
@@ -245,44 +247,40 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
     }
 
 
+    public ResponseEntity<?> getMaterial(String materialId) {
 
+        Optional<NewMaterial> optionalMaterial = newMaterialRepo.findByMaterialId(materialId);
 
-        public ResponseEntity<?> getMaterial(String materialId) {
+        // Using .map() is a clean way to handle the Optional
+        return optionalMaterial.map(material -> {
+                    // Check if the actual PDF data exists in the entity
+                    if (material.getMaterialData() == null || material.getMaterialData().length == 0) {
+                        // If there's a record but no data, it's considered not found.
+                        return ResponseEntity.notFound().build();
+                    }
 
-            Optional<NewMaterial> optionalMaterial = newMaterialRepo.findByMaterialId(materialId);
+                    // Wrap the byte array in a ByteArrayResource for the response body
+                    ByteArrayResource resource = new ByteArrayResource(material.getMaterialData());
 
-            // Using .map() is a clean way to handle the Optional
-            return optionalMaterial.map(material -> {
-                        // Check if the actual PDF data exists in the entity
-                        if (material.getMaterialData() == null || material.getMaterialData().length == 0) {
-                            // If there's a record but no data, it's considered not found.
-                            return ResponseEntity.notFound().build();
-                        }
-
-                        // Wrap the byte array in a ByteArrayResource for the response body
-                        ByteArrayResource resource = new ByteArrayResource(material.getMaterialData());
-
-                        // *** IMPORTANT CORRECTION ***
-                        // Added .contentType(MediaType.APPLICATION_PDF)
-                        // This header tells the browser what kind of file this is,
-                        // so it knows to use a PDF viewer plugin. Without this, the browser
-                        // might try to download the file or display it as garbled text.
-                        return ResponseEntity.ok()
-                                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + material.getPdfFilename() + "\"")
-                                .contentType(MediaType.APPLICATION_PDF)
-                                .contentLength(material.getMaterialData().length) // It's good practice to set the content length
-                                .body(resource);
-                    })
-                    // If the optional was empty (no material found for the ID), return 404.
-                    .orElse(ResponseEntity.notFound().build());
-
-
+                    // *** IMPORTANT CORRECTION ***
+                    // Added .contentType(MediaType.APPLICATION_PDF)
+                    // This header tells the browser what kind of file this is,
+                    // so it knows to use a PDF viewer plugin. Without this, the browser
+                    // might try to download the file or display it as garbled text.
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + material.getPdfFilename() + "\"")
+                            .contentType(MediaType.APPLICATION_PDF)
+                            .contentLength(material.getMaterialData().length) // It's good practice to set the content length
+                            .body(resource);
+                })
+                // If the optional was empty (no material found for the ID), return 404.
+                .orElse(ResponseEntity.notFound().build());
 
 
     }
 
     @Transactional
-    public List<NewRegulationDto>getRegulationList(){
+    public List<NewRegulationDto> getRegulationList() {
 
         List<NewRegulation> all = newRegulationRepo.findAll();
         return all.stream().map(
@@ -298,7 +296,7 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
         ).toList();
     }
 
-    public SubjectListDto getNewSubjectList(NewSubjectListDto dto){
+    public SubjectListDto getNewSubjectList(NewSubjectListDto dto) {
 
         List<NewSubject> subjects = newSubjectRepo.findSubjectByFilter(dto.getRegulationId(), dto.getSemester(), BranchType.valueOf(dto.getBranch()));
 
@@ -315,37 +313,37 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
                 .build();
     }
 
-    public List<NewMaterialDto> getMaterialListBySubjectCode(String subjectCode){
+    public List<NewMaterialDto> getMaterialListBySubjectCode(String subjectCode) {
 
         List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCode(subjectCode);
         return bySubjectCode.stream().map(mapper::newMaterialToNewMaterialDto).toList();
 
     }
 
-    public List<NewMaterialDto> getMaterialListPYQ(String subjectCode){
+    public List<NewMaterialDto> getMaterialListPYQ(String subjectCode) {
 
-        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode,MaterialType.PYQ);
+        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode, MaterialType.PYQ);
         return bySubjectCode.stream().map(mapper::newMaterialToNewMaterialDto).toList();
 
     }
 
-    public List<NewMaterialDto> getMaterialListByQB(String subjectCode){
+    public List<NewMaterialDto> getMaterialListByQB(String subjectCode) {
 
-        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode,MaterialType.QUESTION_BANK);
+        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode, MaterialType.QUESTION_BANK);
         return bySubjectCode.stream().map(mapper::newMaterialToNewMaterialDto).toList();
 
     }
 
-    public List<NewMaterialDto> getMaterialListByNotes(String subjectCode){
+    public List<NewMaterialDto> getMaterialListByNotes(String subjectCode) {
 
-        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode,MaterialType.NOTES);
+        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode, MaterialType.NOTES);
         return bySubjectCode.stream().map(mapper::newMaterialToNewMaterialDto).toList();
 
     }
 
-    public List<NewMaterialDto> getMaterialListByAnnouncement(String subjectCode){
+    public List<NewMaterialDto> getMaterialListByAnnouncement(String subjectCode) {
 
-        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode,MaterialType.ANNOUNCEMENT);
+        List<NewMaterial> bySubjectCode = newMaterialRepo.findBySubjectCodeAndMaterialType(subjectCode, MaterialType.ANNOUNCEMENT);
         return bySubjectCode.stream().map(mapper::newMaterialToNewMaterialDto).toList();
 
     }
@@ -353,10 +351,33 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
 
     public EmailDto getFacultyId(EmailDto dto) {
 
-        NewTeacher newTeacher = newTeacherRepo.findByEmail(dto.getEmail()).get();
-        dto.setFacultyId(newTeacher.getFacultyId());
-        System.out.println("**************************"+newTeacher.getFacultyId()+"******************************");
-        return dto;
+        NewTeacher newTeacher = newTeacherRepo.findByEmail(dto.getEmail()).orElseThrow(() ->
+                new RuntimeException("Teacher not found"));
+        EmailDto d = new EmailDto();
+        d.setFacultyId(newTeacher.getFacultyId());
+        d.setEmail(newTeacher.getEmail());
+
+        System.out.println("**************************" + newTeacher.getFacultyId() + "******************************");
+        return d;
+
+    }
+
+    public NewTeacherDto getFacultyDetail(EmailDto dto) {
+
+        NewTeacher faculty = newTeacherRepo.findByEmail(dto.getEmail()).orElseThrow(() ->
+                new RuntimeException("Teacher not found"));
+        return NewTeacherDto.builder()
+                .name(faculty.getName())
+                .address(faculty.getAddress())
+                .facultyId(faculty.getFacultyId())
+//                .materials(faculty.getMaterials())
+                .phone(faculty.getPhone())
+                .email(faculty.getEmail())
+                .designation(faculty.getDesignation())
+                .subjects(faculty.getSubjects())
+                .imageData(faculty.getImageData())
+                .build();
+
 
     }
 }

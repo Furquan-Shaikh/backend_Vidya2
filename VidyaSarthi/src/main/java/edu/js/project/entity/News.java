@@ -1,5 +1,6 @@
 package edu.js.project.entity;
 
+import edu.js.project.NewEntities.NewTeacher;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,7 +16,7 @@ public class News{
     private String facultyId;
     @ManyToOne
     @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
+    private NewTeacher teacher;
 
 
 

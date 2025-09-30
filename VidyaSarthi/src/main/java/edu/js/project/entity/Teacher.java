@@ -37,8 +37,8 @@ public class Teacher extends Base{
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Material> materials = new HashSet<>();
 
-    @OneToMany(mappedBy = "teacher")
-    private List<News> news = new ArrayList<>();
+//    @OneToMany(mappedBy = "teacher")
+//    private List<News> news = new ArrayList<>();
 
 
 }

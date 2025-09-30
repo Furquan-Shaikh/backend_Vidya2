@@ -1,5 +1,6 @@
 package edu.js.project.NewEntities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.js.project.entity.Teacher;
 import edu.js.project.enums.BranchType;
 import jakarta.persistence.*;
@@ -27,6 +28,7 @@ public class NewSubject {
     @Column(name = "branch")
     private BranchType branchType;
     @ManyToMany(mappedBy = "subjects")
+    @JsonIgnore
     private Set<NewTeacher> teachers = new HashSet<>();
     @ManyToOne
     @JoinColumn

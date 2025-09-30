@@ -19,6 +19,7 @@ public class UploadMaterialDto {
     private String regulationId;
     private MultipartFile pdf;
     private byte[] materialData;
+    private String pdfName;
 
 
 

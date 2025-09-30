@@ -3,11 +3,14 @@ package edu.js.project.NewEntities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import edu.js.project.entity.Base;
 import edu.js.project.entity.Material;
+import edu.js.project.entity.News;
 import edu.js.project.entity.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true, exclude = {"subjects", "materials", "users"})
@@ -46,10 +49,14 @@ public class NewTeacher extends Base{
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     @Builder.Default
+
     private Set<NewSubject> subjects = new HashSet<>();
     @Builder.Default
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<NewMaterial> materials = new HashSet<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "teacher")
+    private List<News> news = new ArrayList<>();
 
 }
 

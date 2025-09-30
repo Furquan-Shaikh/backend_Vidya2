@@ -397,7 +397,7 @@ public class OAuthSecurityConfig {
                                 "/VidyaSarthi/searchByStudentId/**", "/VidyaSarthi/deleteFaculty/**", "/VidyaSarthi/deleteStudent/**",
                                 "/VidyaSarthi/searchByFacultyId/**", "/VidyaSarthi/addRegulation/**",
                                 "/VidyaSarthi/logoutAcc").hasAuthority("Admin")
-                        .requestMatchers("/VidyaSarthi/faculty/**", "/VidyaSarthi/logoutAcc").hasAuthority("Faculty")
+                        .requestMatchers("/VidyaSarthi/faculty/**", "/VidyaSarthi/logoutAcc","/faculty/VidyaSarthi/getFacultyDetail").hasAuthority("Faculty")
                         .requestMatchers("/VidyaSarthi/student/**", "/VidyaSarthi/logoutAcc").hasAuthority("Student")
                         .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**","/VidyaSarthi/getRegulationList",
                                 "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId").permitAll()
