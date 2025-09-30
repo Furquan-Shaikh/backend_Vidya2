@@ -400,7 +400,7 @@ public class OAuthSecurityConfig {
                         .requestMatchers("/VidyaSarthi/faculty/**", "/VidyaSarthi/logoutAcc","/faculty/VidyaSarthi/getFacultyDetail").hasAuthority("Faculty")
                         .requestMatchers("/VidyaSarthi/student/**", "/VidyaSarthi/logoutAcc").hasAuthority("Student")
                         .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**","/VidyaSarthi/getRegulationList",
-                                "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId").permitAll()
+                                "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId","/VidyaSarthi/addAdmin").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(
