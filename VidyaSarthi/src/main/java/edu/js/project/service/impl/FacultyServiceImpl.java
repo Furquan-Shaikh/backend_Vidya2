@@ -151,15 +151,14 @@ public class FacultyServiceImpl implements FacultyService {
         materialRepository.save(notes);
     }
 
-    @Transactional
     @Override
     public void editMaterial(EditMaterialDto editMaterialDto) {
 
-        Material material = materialRepository.findById(editMaterialDto.getId()).orElseThrow(
-                () -> new RuntimeException("Material does not exists")
-        );
-
-        material.setUrl(editMaterialDto.getUrl());
+//        Material material = materialRepository.findById(editMaterialDto.getId()).orElseThrow(
+//                () -> new RuntimeException("Material does not exists")
+//        );
+//
+//        material.setUrl(editMaterialDto.getUrl());
 
     }
 

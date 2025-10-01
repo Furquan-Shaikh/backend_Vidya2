@@ -1,10 +1,12 @@
 package edu.js.project.utility;
 
+import edu.js.project.NewEntities.NewComplain;
 import edu.js.project.NewEntities.NewMaterial;
 import edu.js.project.dto.AdminClgDto;
 import edu.js.project.dto.BranchDto;
 import edu.js.project.dto.ComplainDto;
 import edu.js.project.dto.MaterialDto;
+import edu.js.project.dto.NewComplainDto;
 import edu.js.project.dto.NewMaterialDto;
 import edu.js.project.dto.SemesterDto;
 import edu.js.project.dto.StudentDto;
@@ -30,7 +32,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-09-28T12:00:53+0530",
+    date = "2025-10-01T11:27:16+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.3 (Eclipse Adoptium)"
 )
 @Component
@@ -337,6 +339,23 @@ public class MapperImpl implements Mapper {
         newMaterialDto.regulationId( newMaterial.getRegulationId() );
 
         return newMaterialDto.build();
+    }
+
+    @Override
+    public NewComplain newComplainDtoToNewComplain(NewComplainDto newComplainDto) {
+        if ( newComplainDto == null ) {
+            return null;
+        }
+
+        NewComplain.NewComplainBuilder newComplain = NewComplain.builder();
+
+        newComplain.id( newComplainDto.getId() );
+        newComplain.comment( newComplainDto.getComment() );
+        newComplain.studentId( newComplainDto.getStudentId() );
+        newComplain.materialId( newComplainDto.getMaterialId() );
+        newComplain.complainType( newComplainDto.getComplainType() );
+
+        return newComplain.build();
     }
 
     protected UnitDto unitToUnitDto(Unit unit) {

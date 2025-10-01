@@ -189,6 +189,19 @@ public class NewMaterialController {
 
     }
 
+    @PostMapping("/faculty/editUploadedMaterial")
+    public ResponseEntity<?> editMaterial(@RequestParam("materialId") String materialId,
+                                          @RequestParam("pdf") MultipartFile pdf){
+
+        service.editMaterial(materialId, pdf);
+
+        return ResponseEntity.ok("Material edited successfully");
+
+    }
+
+
+
+
 
 
 

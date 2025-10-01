@@ -1,10 +1,12 @@
 package edu.js.project.service.impl;
 
+import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.StudentDto;
 import edu.js.project.dto.TeacherDto;
 import edu.js.project.entity.Student;
 import edu.js.project.entity.Teacher;
 import edu.js.project.entity.Users;
+import edu.js.project.repository.NewTeacherRepo;
 import edu.js.project.repository.StudentRepository;
 import edu.js.project.repository.TeacherRepository;
 import edu.js.project.repository.UserRepository;
@@ -25,6 +27,7 @@ public class SearchServiceImpl implements SearchService {
 
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final NewTeacherRepo newTeacherRepo;
     private final UserRepository userRepository;
     private final Mapper mapper;
 
@@ -49,7 +52,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public void deleteFaculty(String facultyId) {
 
-        Teacher teacher = teacherRepository.findByFacultyId(facultyId).orElseThrow(
+        NewTeacher teacher = newTeacherRepo.findByFacultyId(facultyId).orElseThrow(
                 () -> new RuntimeException("Faculty not found")
         );
 

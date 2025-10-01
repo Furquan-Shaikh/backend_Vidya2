@@ -1,11 +1,9 @@
 package edu.js.project.controller;
 
-import edu.js.project.dto.ComplainDto;
-import edu.js.project.dto.FindMaterialDto;
-import edu.js.project.dto.MaterialDto;
-import edu.js.project.dto.SubjectDto;
+import edu.js.project.dto.*;
 import edu.js.project.entity.Complain;
 import edu.js.project.service.StudentService;
+import edu.js.project.service.impl.RegulationMaterialsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +16,7 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService service;
+    private final RegulationMaterialsImpl serviceMaterial;
 
 
     @PostMapping("/registerComplain")
@@ -79,6 +78,14 @@ public class StudentController {
 
         List<MaterialDto> dto = service.getPYQList(findMaterialDto);
         return ResponseEntity.ok(dto);
+
+    }
+
+    @PostMapping("/registerNewComplain")
+    public ResponseEntity<?> registerComplain(@RequestBody NewComplainDto dto){
+
+        serviceMaterial.addComplain(dto);
+        return ResponseEntity.ok("Complain raised successfully");
 
     }
 

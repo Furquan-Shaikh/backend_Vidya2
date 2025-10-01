@@ -1,5 +1,6 @@
 package edu.js.project.utility;
 
+import edu.js.project.NewEntities.NewComplain;
 import edu.js.project.NewEntities.NewMaterial;
 import edu.js.project.dto.*;
 import edu.js.project.entity.*;
@@ -61,6 +62,6 @@ public interface Mapper {
 
     NewMaterialDto newMaterialToNewMaterialDto(NewMaterial newMaterial);
 
-
+    NewComplain newComplainDtoToNewComplain(NewComplainDto newComplainDto);
 
 }

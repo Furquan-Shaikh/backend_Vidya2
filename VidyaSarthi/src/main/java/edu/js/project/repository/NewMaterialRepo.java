@@ -18,4 +18,6 @@ public interface NewMaterialRepo extends JpaRepository< NewMaterial,Integer> {
     @Query("select DISTINCT n from NewMaterial n JOIN FETCH n.teacher t where t.facultyId = :facultyId")
     List<NewMaterial> findMaterial(@Param("facultyId") String facultyId);
 
+    List<NewMaterial> findByFacultyId(String facultyId);
+
 }

@@ -1,9 +1,6 @@
 package edu.js.project.service.impl;
 
-import edu.js.project.NewEntities.NewMaterial;
-import edu.js.project.NewEntities.NewRegulation;
-import edu.js.project.NewEntities.NewSubject;
-import edu.js.project.NewEntities.NewTeacher;
+import edu.js.project.NewEntities.*;
 import edu.js.project.dto.*;
 import edu.js.project.entity.Users;
 import edu.js.project.enums.BranchType;
@@ -35,6 +32,7 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
     private final NewRegulationRepo newRegulationRepo;
     private final UserRepository userRepository;
     private final NewSubjectRepo newSubjectRepo;
+    private final NewComplainRepo newComplainRepo;
     private final PasswordEncoder encode;
     private final Mapper mapper;
 
@@ -377,6 +375,40 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
                 .subjects(faculty.getSubjects())
                 .imageData(faculty.getImageData())
                 .build();
+
+
+    }
+
+    @Transactional
+    public void editMaterial(String materialId, MultipartFile pdf) {
+
+        NewMaterial material = newMaterialRepo.findByMaterialId(materialId).orElseThrow(
+                () -> new RuntimeException("Material not found")
+        );
+
+        material.setMaterialData(savePdf(pdf).getMaterialData());
+
+
+    }
+
+    public List<EditMaterialDto> materialListByFaculty(String facultyId){
+
+        return newMaterialRepo.findByFacultyId(facultyId).stream().map(material -> {
+
+            EditMaterialDto edited = new EditMaterialDto();
+            edited.setMaterialId(material.getMaterialId());
+            edited.setPdfName(material.getPdfFilename());
+            return edited;
+        }).toList();
+
+
+    }
+
+
+    public void addComplain(NewComplainDto dto) {
+
+        NewComplain newComplain = mapper.newComplainDtoToNewComplain(dto);
+        newComplainRepo.save(newComplain);
 
 
     }
