@@ -63,5 +63,6 @@ public interface Mapper {
     NewMaterialDto newMaterialToNewMaterialDto(NewMaterial newMaterial);
 
     NewComplain newComplainDtoToNewComplain(NewComplainDto newComplainDto);
+    NewComplainDto newComplainToNewComplainDto(NewComplain newComplain);
 
 }

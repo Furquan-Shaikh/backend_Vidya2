@@ -1,10 +1,12 @@
 package edu.js.project.dto;
 
-import edu.js.project.enums.ComplainType;
-import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Builder
+@Setter
 public class NewComplainDto {
 
 
@@ -12,6 +14,8 @@ public class NewComplainDto {
     private String comment;
     private String studentId;
     private String materialId;
-    private ComplainType complainType;
+    private String facultyId;
+    private String complainType;
+    private String complainStatus;
 
 }

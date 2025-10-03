@@ -24,6 +24,8 @@ import edu.js.project.entity.Subject;
 import edu.js.project.entity.Teacher;
 import edu.js.project.entity.Unit;
 import edu.js.project.entity.Users;
+import edu.js.project.enums.ComplainStatus;
+import edu.js.project.enums.ComplainType;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -32,7 +34,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-10-01T11:27:16+0530",
+    date = "2025-10-03T10:18:40+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.3 (Eclipse Adoptium)"
 )
 @Component
@@ -353,9 +355,38 @@ public class MapperImpl implements Mapper {
         newComplain.comment( newComplainDto.getComment() );
         newComplain.studentId( newComplainDto.getStudentId() );
         newComplain.materialId( newComplainDto.getMaterialId() );
-        newComplain.complainType( newComplainDto.getComplainType() );
+        newComplain.facultyId( newComplainDto.getFacultyId() );
+        if ( newComplainDto.getComplainType() != null ) {
+            newComplain.complainType( Enum.valueOf( ComplainType.class, newComplainDto.getComplainType() ) );
+        }
+        if ( newComplainDto.getComplainStatus() != null ) {
+            newComplain.complainStatus( Enum.valueOf( ComplainStatus.class, newComplainDto.getComplainStatus() ) );
+        }
 
         return newComplain.build();
+    }
+
+    @Override
+    public NewComplainDto newComplainToNewComplainDto(NewComplain newComplain) {
+        if ( newComplain == null ) {
+            return null;
+        }
+
+        NewComplainDto.NewComplainDtoBuilder newComplainDto = NewComplainDto.builder();
+
+        newComplainDto.id( newComplain.getId() );
+        newComplainDto.comment( newComplain.getComment() );
+        newComplainDto.studentId( newComplain.getStudentId() );
+        newComplainDto.materialId( newComplain.getMaterialId() );
+        newComplainDto.facultyId( newComplain.getFacultyId() );
+        if ( newComplain.getComplainType() != null ) {
+            newComplainDto.complainType( newComplain.getComplainType().name() );
+        }
+        if ( newComplain.getComplainStatus() != null ) {
+            newComplainDto.complainStatus( newComplain.getComplainStatus().name() );
+        }
+
+        return newComplainDto.build();
     }
 
     protected UnitDto unitToUnitDto(Unit unit) {

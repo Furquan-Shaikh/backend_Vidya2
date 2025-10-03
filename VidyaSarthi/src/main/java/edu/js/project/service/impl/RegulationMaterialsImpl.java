@@ -4,6 +4,7 @@ import edu.js.project.NewEntities.*;
 import edu.js.project.dto.*;
 import edu.js.project.entity.Users;
 import edu.js.project.enums.BranchType;
+import edu.js.project.enums.ComplainStatus;
 import edu.js.project.enums.MaterialType;
 import edu.js.project.repository.*;
 import edu.js.project.service.RegulationMaterials;
@@ -33,6 +34,7 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
     private final UserRepository userRepository;
     private final NewSubjectRepo newSubjectRepo;
     private final NewComplainRepo newComplainRepo;
+    private final StudentRepository studentRepository;
     private final PasswordEncoder encode;
     private final Mapper mapper;
 
@@ -112,6 +114,22 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
         if (!(uploadNoteDto.getPdf() == null || uploadNoteDto.getPdf().isEmpty()))
             build.setMaterialData(savePdf(uploadNoteDto.getPdf()).getMaterialData());
         newMaterialRepo.save(build);
+
+    }
+
+    @Override
+    public List<NewComplainDto> getAllComplains(String facultyId) {
+
+        return newComplainRepo.findByFacultyId(facultyId).stream().map(mapper::newComplainToNewComplainDto).toList();
+
+    }
+
+    @Transactional
+    @Override
+    public void updateComplain(UpdatedStatusDto updatedStatus) {
+
+        NewComplain newComplain = newComplainRepo.findById(updatedStatus.getId()).orElseThrow(() -> new RuntimeException("Complain not there to update"));
+        newComplain.setComplainStatus(ComplainStatus.valueOf(updatedStatus.getUpdatedStatus()));
 
     }
 
@@ -405,8 +423,10 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
     }
 
 
+    @Transactional
     public void addComplain(NewComplainDto dto) {
 
+        studentRepository.findByStudentId(dto.getStudentId()).orElseThrow(() -> new RuntimeException("Student not found"));
         NewComplain newComplain = mapper.newComplainDtoToNewComplain(dto);
         newComplainRepo.save(newComplain);
 

@@ -7,6 +7,7 @@ import edu.js.project.service.FacultyService;
 import edu.js.project.service.RegulationMaterials;
 import edu.js.project.service.impl.RegulationMaterialsImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -118,6 +119,21 @@ public class TeacherController {
         List<EditMaterialDto> editMaterialDto = materialService.materialListByFaculty(facultyId);
         return ResponseEntity.ok(editMaterialDto);
 
+
+    }
+
+    @GetMapping("/getAllComplains/{facultyId}")
+    public ResponseEntity<?> getAllComplains(@PathVariable("facultyId") String facultyId){
+
+        return ResponseEntity.ok(materialService.getAllComplains(facultyId));
+
+    }
+
+    @PostMapping("/updateComplainStatus")
+    public ResponseEntity<?> updateComplainStatus(@RequestBody UpdatedStatusDto updatedStatus){
+
+        materialService.updateComplain(updatedStatus);
+        return ResponseEntity.ok("Request Updated");
 
     }
 
