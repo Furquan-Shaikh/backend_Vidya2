@@ -10,9 +10,11 @@ import org.mapstruct.MappingConstants;
 @org.mapstruct.Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface Mapper {
 
+    @Mapping(target = "newTeacherDto", source = "newTeacher")
     @Mapping(target = "teacherDto", source = "teacher")
     @Mapping(target = "studentDto", source = "student")
     @Mapping(target = "adminClgDto", source = "adminClg")
+
     UsersDto usersToUsersDto(Users users);
 
     AdminClgDto adminClgToAdminClgDto(AdminClg adminClg);

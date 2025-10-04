@@ -11,10 +11,13 @@ import edu.js.project.service.UserService;
 import edu.js.project.utility.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import edu.js.project.responseStructure.ResponseStructure;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,40 +32,38 @@ public class VidyaSarthiController {
     private final TeacherRepository teacherRepository;
 
 
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
 
         boolean verifyStatus = service.verifyUser(loginRequest.getEmail(), loginRequest.getPassword());
 
-        if(verifyStatus){
+        if (verifyStatus) {
             return ResponseEntity.ok(new LoginResponse("Login successful"));
-        }
-        else{
+        } else {
             return ResponseEntity.ok(new LoginResponse("Login fail"));
         }
 
     }
 
     @PostMapping("/addStudent")
-    public ResponseEntity<ResponseStructure<String>>addStudent(@RequestBody StudentDto req){
+    public ResponseEntity<ResponseStructure<String>> addStudent(@RequestBody StudentDto req) {
 
         ResponseStructure<String> rs = new ResponseStructure<>();
         boolean isSuccessfullySignedUp = service.addUserToDB(req);
-        if (isSuccessfullySignedUp){
+        if (isSuccessfullySignedUp) {
             rs.setStatus(HttpStatus.OK.value());
-            rs.setMessage(String.format("%s account create",req.getName()));
+            rs.setMessage(String.format("%s account create", req.getName()));
 
             return new ResponseEntity<ResponseStructure<String>>(rs, HttpStatus.OK);
-        }else {
+        } else {
             throw new RuntimeException("Username already exists");
         }
 
     }
 
     @PostMapping("/addFaculty")
-    public ResponseEntity<?> addTeacher(@RequestBody TeacherDto teacherDto){
+    public ResponseEntity<?> addTeacher(@RequestBody TeacherDto teacherDto) {
 
         try {
             service.addUser(teacherDto);
@@ -74,19 +75,19 @@ public class VidyaSarthiController {
     }
 
     @DeleteMapping("/removeUser")
-    public ResponseEntity<?> removeUser(@RequestBody UserId req){
+    public ResponseEntity<?> removeUser(@RequestBody UserId req) {
 
-            try{
-                service.removeUser(req.getId());
-                return ResponseEntity.ok("User Remove Successfully");
-            } catch (RuntimeException e) {
-                return ResponseEntity.notFound().build();
-            }
+        try {
+            service.removeUser(req.getId());
+            return ResponseEntity.ok("User Remove Successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
 
     }
 
     @GetMapping("/facultyList")
-    public ResponseEntity<?> getFacultyList(){
+    public ResponseEntity<?> getFacultyList() {
 
         List<TeacherDto> facultyList = service.getFacultyList();
         return ResponseEntity.ok(facultyList);
@@ -94,7 +95,7 @@ public class VidyaSarthiController {
     }
 
     @GetMapping("/studentList")
-    public ResponseEntity<?> getStudentList(){
+    public ResponseEntity<?> getStudentList() {
 
         List<StudentDto> studentList = service.getStudentList();
         return ResponseEntity.ok(studentList);
@@ -102,17 +103,17 @@ public class VidyaSarthiController {
     }
 
     @PostMapping("/searchUser")
-    public ResponseEntity<?> getUserData(@RequestBody UserId userId){
+    public ResponseEntity<?> getUserData(@RequestBody UserId userId) {
 
         Base userDetail = service.getUserDetail(userId.getId());
-        if(userDetail instanceof AdminClg user){
+        if (userDetail instanceof AdminClg user) {
 
-            return ResponseEntity.ok( mapper.adminClgToAdminClgDto(user));
+            return ResponseEntity.ok(mapper.adminClgToAdminClgDto(user));
 
         } else if (userDetail instanceof Teacher user) {
             return ResponseEntity.ok(mapper.teacherToTeacherDto(user));
 
-        }else if(userDetail instanceof Student user) {
+        } else if (userDetail instanceof Student user) {
 
             return ResponseEntity.ok(user);
 
@@ -147,37 +148,44 @@ public class VidyaSarthiController {
 
     }
 
-    @PostMapping("/updateStudent")
-    public ResponseEntity<?> updateStudent(@RequestBody StudentDto studentDto){
+//    @PostMapping("/updateStudent")
+//    public ResponseEntity<?> updateStudent(@RequestBody StudentDto studentDto){
+//
+//
+//        service.updateStudentDetail(studentDto);
+//        return ResponseEntity.ok("Updated Successfully");
+//
+//    }
 
 
-        service.updateStudentDetail(studentDto);
+    @PostMapping(value = "/updateStudent", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateStudent(
+            @ModelAttribute StudentDto studentDto,                                   // form fields -> DTO
+            @RequestParam(value = "photo", required = false) MultipartFile photo     // file input named "photo"
+    ) throws IOException {
+        service.updateStudentDetail(studentDto, photo);
         return ResponseEntity.ok("Updated Successfully");
-
     }
 
-    @PostMapping("/updateFaculty")
-    public ResponseEntity<?> updateFaculty(@RequestBody TeacherDto teacherDto){
+
+    @PostMapping(value = "/updateFaculty", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateFaculty(@ModelAttribute NewTeacherDto teacherDto,
+                                           @RequestParam(value = "photo", required = false) MultipartFile photo) throws IOException {
 
 
-        service.updateFacultyDetail(teacherDto);
+        service.updateFacultyDetail(teacherDto, photo);
         return ResponseEntity.ok("Updated Successfully");
 
     }
 
     @GetMapping("/addAdmin")
-    public ResponseEntity<?> addAdminInfo(){
+    public ResponseEntity<?> addAdminInfo() {
 
         System.out.println("I am inside add admin");
         service.addAdmin();
         return ResponseEntity.ok("Admin Added Successfully");
 
     }
-
-
-
-
-
 
 
 }

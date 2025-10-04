@@ -1,5 +1,6 @@
 package edu.js.project.service.impl;
 
+import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.*;
 import edu.js.project.entity.*;
 import edu.js.project.repository.*;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final SubjectRepository subjectRepository;
     private final UnitRepository unitRepository;
     private final MaterialRepository materialRepository;
+    private final NewTeacherRepo newTeacherRepo;
     private final PasswordEncoder encode;
 
     private final Mapper mapper;
@@ -319,35 +323,88 @@ public class UserServiceImpl implements UserService {
 
     }
 
+//    @Transactional
+//    public void updateStudentDetail(StudentDto studentDto, MultipartFile photo){
+//
+//        Student student = studentRepository.findByStudentId(studentDto.getStudentId()).orElseThrow(
+//                () -> new RuntimeException("Wrong Student Id")
+//        );
+//
+//        Student std = mapper.studentDtoToStudent(studentDto);
+//        student.setAddress(std.getAddress());
+//        student.setSemester(std.getSemester());
+//        student.setPhone(std.getPhone());
+//        student.setRegulation(std.getRegulation());
+//
+//
+//    }
+
+
     @Transactional
-    public void updateStudentDetail(StudentDto studentDto){
+    public void updateStudentDetail(StudentDto studentDto, MultipartFile photo) throws IOException, IOException {
+        Student student = studentRepository.findByStudentId(studentDto.getStudentId())
+                .orElseThrow(() -> new RuntimeException("Wrong Student Id"));
 
-        Student student = studentRepository.findByStudentId(studentDto.getStudentId()).orElseThrow(
-                () -> new RuntimeException("Wrong Student Id")
-        );
+        // update simple fields
+        student.setAddress(studentDto.getAddress());
+        student.setSemester(studentDto.getSemester());
+        student.setPhone(studentDto.getPhone());
+        student.setRegulation(studentDto.getRegulation());
 
-        Student std = mapper.studentDtoToStudent(studentDto);
-        student.setAddress(std.getAddress());
-        student.setSemester(std.getSemester());
-        student.setPhone(std.getPhone());
-        student.setRegulation(std.getRegulation());
+        // handle photo if present
+        if (photo != null && !photo.isEmpty()) {
+            // optional: validate content-type and size
+            String contentType = photo.getContentType();
+            if (contentType == null || (!contentType.startsWith("image/"))) {
+                throw new RuntimeException("Uploaded file is not an image");
+            }
+            // optional: size check e.g., 5MB max
+            long maxBytes = 5L * 1024 * 1024;
+            if (photo.getSize() > maxBytes) {
+                throw new RuntimeException("File too large");
+            }
 
+            byte[] bytes = photo.getBytes(); // read bytes
+            student.setImageData(bytes);     // ensure Student entity has imageData byte[] with @Lob
+            // optional: store MIME type
+            // optionally store original filename: student.setImageName(photo.getOriginalFilename());
+        }
 
+        studentRepository.save(student); // flush changes
     }
 
+
     @Transactional
-    public void updateFacultyDetail(TeacherDto teacherDto){
+    public void updateFacultyDetail(NewTeacherDto teacherDto, MultipartFile photo) throws IOException {
 
 
-        Teacher faculty = teacherRepository.findByFacultyId(teacherDto.getFacultyId()).orElseThrow(
+        NewTeacher faculty = newTeacherRepo.findByFacultyId(teacherDto.getFacultyId()).orElseThrow(
                 () -> new RuntimeException("Wrong facultyId")
         );
 
-        Teacher teacher = mapper.teacherDtoToTeacher(teacherDto);
-        faculty.setAddress(teacher.getAddress());
-        faculty.setSubject(teacher.getSubject());
-        faculty.setPhone(teacher.getPhone());
-        faculty.setDesignation(teacher.getDesignation());
+
+        faculty.setAddress(teacherDto.getAddress());
+        faculty.getSubjects().addAll(teacherDto.getSubjects());
+        faculty.setPhone(teacherDto.getPhone());
+        faculty.setDesignation(teacherDto.getDesignation());
+
+        if (photo != null && !photo.isEmpty()) {
+            // optional: validate content-type and size
+            String contentType = photo.getContentType();
+            if (contentType == null || (!contentType.startsWith("image/"))) {
+                throw new RuntimeException("Uploaded file is not an image");
+            }
+            // optional: size check e.g., 5MB max
+            long maxBytes = 5L * 1024 * 1024;
+            if (photo.getSize() > maxBytes) {
+                throw new RuntimeException("File too large");
+            }
+
+            byte[] bytes = photo.getBytes(); // read bytes
+            faculty.setImageData(bytes);     // ensure Student entity has imageData byte[] with @Lob
+            // optional: store MIME type
+            // optionally store original filename: student.setImageName(photo.getOriginalFilename());
+        }
 
 
     }

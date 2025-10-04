@@ -1,6 +1,8 @@
 package edu.js.project.controller;
 
 import edu.js.project.dto.StudentDto;
+import edu.js.project.dto.UsersDto;
+import edu.js.project.responseStructure.LoginSuccess;
 import edu.js.project.service.UserService;
 import edu.js.project.service.impl.BlacklistToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,8 +97,23 @@ public class OAuthController {
             loginResultResponse.setToken(null);
             loginResultResponse.setSuccess(false);
         }
+        UsersDto userDetail = userService.getUserDetail(req.username());
+        LoginSuccess success = getLoginSuccess(userDetail, loginResultResponse);
         loginResultResponse.setDto(userService.getUserDetail(req.username()));
-        return ResponseEntity.ok(loginResultResponse);
+        return ResponseEntity.ok(success);
+    }
+
+    private static LoginSuccess getLoginSuccess(UsersDto userDetail, LoginResultResponse loginResultResponse) {
+        String userId;
+        if(("Admin").equals(userDetail.getRoles())){
+            userId = userDetail.getAdminClgDto().getAdminId();
+        } else if (("Faculty").equals(userDetail.getRoles())) {
+            userId = userDetail.getNewTeacherDto().getFacultyId();
+        }else {
+            userId = userDetail.getStudentDto().getStudentId();
+        }
+        LoginSuccess success = new LoginSuccess(loginResultResponse.getToken(), userDetail.getRoles(), loginResultResponse.isSuccess(), userDetail.getEmail(), userId);
+        return success;
     }
 
     @PostMapping("/logoutAcc")

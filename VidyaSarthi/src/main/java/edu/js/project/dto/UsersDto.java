@@ -22,5 +22,6 @@ public class UsersDto {
     private AdminClgDto adminClgDto;
     private TeacherDto teacherDto;
     private StudentDto studentDto;
+    private NewTeacherDto newTeacherDto;
 
 }

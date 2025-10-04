@@ -2,12 +2,15 @@ package edu.js.project.utility;
 
 import edu.js.project.NewEntities.NewComplain;
 import edu.js.project.NewEntities.NewMaterial;
+import edu.js.project.NewEntities.NewSubject;
+import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.AdminClgDto;
 import edu.js.project.dto.BranchDto;
 import edu.js.project.dto.ComplainDto;
 import edu.js.project.dto.MaterialDto;
 import edu.js.project.dto.NewComplainDto;
 import edu.js.project.dto.NewMaterialDto;
+import edu.js.project.dto.NewTeacherDto;
 import edu.js.project.dto.SemesterDto;
 import edu.js.project.dto.StudentDto;
 import edu.js.project.dto.SubjectDto;
@@ -34,7 +37,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-10-03T10:18:40+0530",
+    date = "2025-10-04T09:05:57+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.3 (Eclipse Adoptium)"
 )
 @Component
@@ -48,6 +51,7 @@ public class MapperImpl implements Mapper {
 
         UsersDto.UsersDtoBuilder usersDto = UsersDto.builder();
 
+        usersDto.newTeacherDto( newTeacherToNewTeacherDto( users.getNewTeacher() ) );
         usersDto.teacherDto( teacherToTeacherDto( users.getTeacher() ) );
         usersDto.studentDto( studentToStudentDto( users.getStudent() ) );
         usersDto.adminClgDto( adminClgToAdminClgDto( users.getAdminClg() ) );
@@ -387,6 +391,36 @@ public class MapperImpl implements Mapper {
         }
 
         return newComplainDto.build();
+    }
+
+    protected NewTeacherDto newTeacherToNewTeacherDto(NewTeacher newTeacher) {
+        if ( newTeacher == null ) {
+            return null;
+        }
+
+        NewTeacherDto.NewTeacherDtoBuilder newTeacherDto = NewTeacherDto.builder();
+
+        newTeacherDto.name( newTeacher.getName() );
+        newTeacherDto.email( newTeacher.getEmail() );
+        newTeacherDto.phone( newTeacher.getPhone() );
+        newTeacherDto.facultyId( newTeacher.getFacultyId() );
+        newTeacherDto.designation( newTeacher.getDesignation() );
+        newTeacherDto.password( newTeacher.getPassword() );
+        newTeacherDto.address( newTeacher.getAddress() );
+        byte[] imageData = newTeacher.getImageData();
+        if ( imageData != null ) {
+            newTeacherDto.imageData( Arrays.copyOf( imageData, imageData.length ) );
+        }
+        Set<NewSubject> set = newTeacher.getSubjects();
+        if ( set != null ) {
+            newTeacherDto.subjects( new LinkedHashSet<NewSubject>( set ) );
+        }
+        Set<NewMaterial> set1 = newTeacher.getMaterials();
+        if ( set1 != null ) {
+            newTeacherDto.materials( new LinkedHashSet<NewMaterial>( set1 ) );
+        }
+
+        return newTeacherDto.build();
     }
 
     protected UnitDto unitToUnitDto(Unit unit) {
