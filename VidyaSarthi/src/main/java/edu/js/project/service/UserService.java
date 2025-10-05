@@ -14,7 +14,7 @@ public interface UserService {
     public void addAdmin();
     public void removeUser(long userId);
     public boolean verifyUser(String email, String password);
-    public List<TeacherDto> getFacultyList();
+    public List<UserTableDto> getFacultyList();
     public List<StudentDto> getStudentList();
     public <T extends Base> T getUserDetail(long userId);
     public void addRegulation(RegulationInputDto input);

@@ -1,5 +1,6 @@
 package edu.js.project.service.impl;
 
+import edu.js.project.NewEntities.NewSubject;
 import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.*;
 import edu.js.project.entity.*;
@@ -10,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +28,7 @@ public class FacultyServiceImpl implements FacultyService {
     private final ComplainRepository complainRepository;
     private final NewTeacherRepo newTeacherRepo;
     private final NewMaterialRepo newMaterialRepo;
+    private final NewSubjectRepo newSubjectRepo;
 
     public boolean checkFacultyStatus(String facultyId) {
 
@@ -177,6 +177,23 @@ public class FacultyServiceImpl implements FacultyService {
         return teacherRepository.findByEmail(email).map(mapper::teacherToTeacherDto).orElseThrow(
                 () -> new RuntimeException("Teacher not found")
         );
+    }
+
+    @Override
+    public SubjectListDto getNewSubjectList() {
+        LinkedHashMap<String, String> collect = newSubjectRepo.findAll().stream().collect(Collectors.toMap(
+                NewSubject::getSubjectCode,
+                NewSubject::getName,
+                (existing, replacement) -> existing,
+                LinkedHashMap::new
+        ));
+        return SubjectListDto.builder().subject(collect).build();
+    }
+
+    @Transactional
+    @Override
+    public byte[] getFacultyPic(String facultyId) {
+        return newTeacherRepo.findByFacultyId(facultyId).map(NewTeacher::getImageData).orElseThrow(() -> new RuntimeException("Faculty not found"));
     }
 
 

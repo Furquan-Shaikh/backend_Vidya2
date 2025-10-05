@@ -8,6 +8,8 @@ import edu.js.project.service.RegulationMaterials;
 import edu.js.project.service.impl.RegulationMaterialsImpl;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -135,6 +137,36 @@ public class TeacherController {
         materialService.updateComplain(updatedStatus);
         return ResponseEntity.ok("Request Updated");
 
+    }
+
+
+    @GetMapping("/getSubjectList")
+    public ResponseEntity<?> getSubjectList(){
+
+        return ResponseEntity.ok(service.getNewSubjectList());
+
+    }
+
+    @GetMapping(value = "/getPic/{facultyId}", produces = { "image/png", "image/jpeg", "application/octet-stream" })
+    public ResponseEntity<byte[]> getFacultyPic(@PathVariable String facultyId) {
+        try {
+            byte[] img = service.getFacultyPic(facultyId); // your service returns raw bytes or throws
+            if (img == null || img.length == 0) {
+                return ResponseEntity.noContent().build(); // 204 - frontend shows placeholder
+            }
+
+            // if you know actual type, use it; otherwise choose a default
+            MediaType mediaType = MediaType.IMAGE_PNG; // or MediaType.IMAGE_JPEG
+
+            return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .contentLength(img.length)
+                    .body(img);
+        } catch (RuntimeException ex) { // faculty not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 

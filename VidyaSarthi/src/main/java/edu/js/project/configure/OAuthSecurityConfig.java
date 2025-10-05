@@ -389,18 +389,18 @@ public class OAuthSecurityConfig {
                 .authorizeHttpRequests(req -> req
                         // 2. **ALLOW OPTIONS (Preflight):** Ensure all OPTIONS requests bypass authentication
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/VidyaSarthi/loginAcc", "/VidyaSarthi/signUpAcc","/VidyaSarthi/addNewNotes",
-                                "/VidyaSarthi/addNewPYQ","/VidyaSarthi/addNewQB","/VidyaSarthi/getNewSubjectList").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/VidyaSarthi/loginAcc", "/VidyaSarthi/signUpAcc").permitAll()
                         .requestMatchers( "/VidyaSarthi/addFaculty",
                                 "/VidyaSarthi/updateStudent", "/VidyaSarthi/searchTeacherByFilter", "/VidyaSarthi/searchStudentByFilter",
                                 "/VidyaSarthi/addStudent", "/VidyaSarthi/facultyList", "/VidyaSarthi/studentList",
                                 "/VidyaSarthi/searchByStudentId/**", "/VidyaSarthi/deleteFaculty/**", "/VidyaSarthi/deleteStudent/**",
                                 "/VidyaSarthi/searchByFacultyId/**", "/VidyaSarthi/addRegulation/**",
-                                "/VidyaSarthi/logoutAcc","/VidyaSarthi/addNewRegulation","/VidyaSarthi/addNewTeacher").hasAuthority("Admin")
-                        .requestMatchers("/VidyaSarthi/faculty/**", "/VidyaSarthi/logoutAcc","/VidyaSarthi/updateFaculty","/faculty/VidyaSarthi/getFacultyDetail").hasAuthority("Faculty")
-                        .requestMatchers("/VidyaSarthi/student/**", "/VidyaSarthi/logoutAcc").hasAuthority("Student")
-                        .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**","/VidyaSarthi/getRegulationList",
+                                "/VidyaSarthi/addNewRegulation","/VidyaSarthi/addNewTeacher").hasAuthority("Admin")
+                        .requestMatchers("/VidyaSarthi/faculty/**", "/faculty/VidyaSarthi/getFacultyDetail").hasAuthority("Faculty")
+                        .requestMatchers("/VidyaSarthi/student/**").hasAuthority("Student")
+                        .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**",
                                 "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId","/VidyaSarthi/addAdmin").permitAll()
+                        .requestMatchers("/VidyaSarthi/logoutAcc").authenticated()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(

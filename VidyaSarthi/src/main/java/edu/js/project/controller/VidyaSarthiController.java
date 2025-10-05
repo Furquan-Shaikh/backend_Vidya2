@@ -89,7 +89,7 @@ public class VidyaSarthiController {
     @GetMapping("/facultyList")
     public ResponseEntity<?> getFacultyList() {
 
-        List<TeacherDto> facultyList = service.getFacultyList();
+        List<UserTableDto> facultyList = service.getFacultyList();
         return ResponseEntity.ok(facultyList);
 
     }
@@ -168,7 +168,7 @@ public class VidyaSarthiController {
     }
 
 
-    @PostMapping(value = "/updateFaculty", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/faculty/updateFaculty", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateFaculty(@ModelAttribute NewTeacherDto teacherDto,
                                            @RequestParam(value = "photo", required = false) MultipartFile photo) throws IOException {
 

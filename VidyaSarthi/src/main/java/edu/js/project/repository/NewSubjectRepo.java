@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface NewSubjectRepo extends JpaRepository<NewSubject,Integer> {
 
@@ -17,5 +18,6 @@ public interface NewSubjectRepo extends JpaRepository<NewSubject,Integer> {
     List<NewSubject>findSubjectByFilter(@Param("regulationId")String regulationId, @Param("semester") int semester, @Param("branch") BranchType branch);
 
     List<NewSubject> findByRegulationIdAndSemester(String regulationId, int semester);
+    Set<NewSubject> findBySubjectCodeIn(Set<String> subjectCodes);
 
 }

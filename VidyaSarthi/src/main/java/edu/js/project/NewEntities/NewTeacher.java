@@ -35,7 +35,7 @@ public class NewTeacher extends Base{
     private String password;
     private String address;
     @Lob
-    @Column(name = "image_data")
+    @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
     @JsonBackReference("faculty-ref")

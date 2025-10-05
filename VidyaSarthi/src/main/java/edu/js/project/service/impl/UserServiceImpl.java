@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final UnitRepository unitRepository;
     private final MaterialRepository materialRepository;
     private final NewTeacherRepo newTeacherRepo;
+    private final NewSubjectRepo newSubjectRepo;
     private final PasswordEncoder encode;
 
     private final Mapper mapper;
@@ -166,12 +167,22 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public List<TeacherDto> getFacultyList() {
+    public List<UserTableDto> getFacultyList() {
 
 
 //        List<Teacher> all = teacherRepository.findAll();
 //        return all.stream().map(mapper::teacherToTeacherDto).toList();
-        return userRepository.getFacultyList().stream().map(mapper::usersToUsersDto).map(UsersDto::getTeacherDto).toList();
+        return userRepository.getFacultyList().stream().map(faculty -> {
+
+            UserTableDto dto = new UserTableDto();
+            dto.setFacultyId(faculty.getNewTeacher().getFacultyId());
+            dto.setName(faculty.getNewTeacher().getName());
+            dto.setEmail(faculty.getEmail());
+            dto.setDesignation(faculty.getNewTeacher().getDesignation());
+            dto.setAddress(faculty.getNewTeacher().getAddress());
+            return dto;
+
+        }).toList();
     }
 
     @Override
@@ -384,7 +395,7 @@ public class UserServiceImpl implements UserService {
 
 
         faculty.setAddress(teacherDto.getAddress());
-        faculty.getSubjects().addAll(teacherDto.getSubjects());
+        faculty.setSubjects(newSubjectRepo.findBySubjectCodeIn(teacherDto.getSubjectCodes()));
         faculty.setPhone(teacherDto.getPhone());
         faculty.setDesignation(teacherDto.getDesignation());
 

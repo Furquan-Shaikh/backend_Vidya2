@@ -33,7 +33,7 @@ public class NewMaterialController {
     }
 
 
-    @PostMapping("/addNewNotes")
+    @PostMapping("faculty/addNewNotes")
     public ResponseEntity<?> addNotes(
             @RequestParam("materialId") String materialId,
             @RequestParam("subjectCode") String subjectCode,
@@ -56,14 +56,14 @@ public class NewMaterialController {
         return ResponseEntity.ok("Notes Uploaded Api");
     }
 
-    @GetMapping("/getRegulationList")
+    @GetMapping("/faculty/getRegulationList")
     public ResponseEntity<?> getRegulation() {
 
         return ResponseEntity.ok(service.getRegulationList());
 
     }
 
-    @PostMapping("/addNewPYQ")
+    @PostMapping("/faculty/addNewPYQ")
     public ResponseEntity<?> addPYQ(@RequestParam("materialId") String materialId,
                                     @RequestParam("subjectCode") String subjectCode,
                                     @RequestParam("facultyId") String facultyId,
@@ -85,7 +85,7 @@ public class NewMaterialController {
 
     }
 
-    @PostMapping("/addNewQB")
+    @PostMapping("faculty/addNewQB")
     public ResponseEntity<?> addQB(@RequestParam("materialId") String materialId,
                                    @RequestParam("subjectCode") String subjectCode,
                                    @RequestParam("facultyId") String facultyId,
@@ -123,7 +123,7 @@ public class NewMaterialController {
     }
 
 
-    @PostMapping("/getNewSubjectList")
+    @PostMapping("faculty/getNewSubjectList")
     public ResponseEntity<?> getNewSubjectList(@RequestBody NewSubjectListDto dto) {
 
 
