@@ -391,15 +391,16 @@ public class OAuthSecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/VidyaSarthi/loginAcc", "/VidyaSarthi/signUpAcc").permitAll()
                         .requestMatchers( "/VidyaSarthi/addFaculty",
-                                "/VidyaSarthi/updateStudent", "/VidyaSarthi/searchTeacherByFilter", "/VidyaSarthi/searchStudentByFilter",
-                                "/VidyaSarthi/addStudent", "/VidyaSarthi/facultyList", "/VidyaSarthi/studentList",
-                                "/VidyaSarthi/searchByStudentId/**", "/VidyaSarthi/deleteFaculty/**", "/VidyaSarthi/deleteStudent/**",
-                                "/VidyaSarthi/searchByFacultyId/**", "/VidyaSarthi/addRegulation/**",
+                                 "/VidyaSarthi/searchTeacherByFilter", "/VidyaSarthi/searchStudentByFilter",
+                                "/VidyaSarthi/addStudent", "/VidyaSarthi/facultyList", "/VidyaSarthi/studentList"
+                                , "/VidyaSarthi/deleteFaculty/**", "/VidyaSarthi/deleteStudent/**",
+                                 "/VidyaSarthi/addRegulation/**",
                                 "/VidyaSarthi/addNewRegulation","/VidyaSarthi/addNewTeacher").hasAuthority("Admin")
                         .requestMatchers("/VidyaSarthi/faculty/**", "/faculty/VidyaSarthi/getFacultyDetail").hasAuthority("Faculty")
                         .requestMatchers("/VidyaSarthi/student/**").hasAuthority("Student")
-                        .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**",
-                                "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId","/VidyaSarthi/addAdmin").permitAll()
+                        .requestMatchers("/VidyaSarthi/addAdmin").permitAll()
+//                                .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**",
+//                                "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId","/VidyaSarthi/addAdmin").permitAll()
                         .requestMatchers("/VidyaSarthi/logoutAcc").authenticated()
                         .anyRequest().authenticated()
                 )

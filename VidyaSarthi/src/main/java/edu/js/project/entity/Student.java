@@ -29,7 +29,7 @@ public class Student extends Base{
     private String year;
     private String regulation;
     @Lob
-    @Column(name = "image_data")
+    @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
     private String semester;
     @JsonBackReference("std-ref")

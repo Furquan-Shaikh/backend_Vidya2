@@ -1,10 +1,9 @@
 package edu.js.project.service.impl;
 
-import edu.js.project.dto.ComplainDto;
-import edu.js.project.dto.FindMaterialDto;
-import edu.js.project.dto.MaterialDto;
-import edu.js.project.dto.SubjectDto;
+import edu.js.project.NewEntities.NewTeacher;
+import edu.js.project.dto.*;
 import edu.js.project.entity.Complain;
+import edu.js.project.entity.News;
 import edu.js.project.entity.Student;
 import edu.js.project.entity.Unit;
 import edu.js.project.repository.*;
@@ -28,6 +27,9 @@ public class StudentServiceImpl implements StudentService {
     private final ComplainRepository complainRepository;
     private final UnitRepository unitRepository;
     private final MaterialRepository materialRepository;
+    private final NewsRepository newsRepository;
+    private final NewMaterialRepo newMaterialRepo;
+    private final NewComplainRepo newComplainRepo;
 
     @Override
     public void registerComplain(ComplainDto complain) {
@@ -96,6 +98,27 @@ public class StudentServiceImpl implements StudentService {
         return materialRepository.findBySubject_SubjectCodeAndType(findMaterialDto.getSubjectCode(), "QB")
                 .stream().map(mapper::materialToMaterialDto)
                 .toList();
+    }
+
+    @Override
+    public byte[] getStudentPic(String studentId) {
+        return studentRepository.findByStudentId(studentId).map(Student::getImageData).orElseThrow(() -> new RuntimeException("Student not found"));
+
+    }
+
+    @Override
+    public List<News> getNewsAndAnnouncementsList() {
+        return newsRepository.findAll().stream().toList();
+    }
+
+    @Override
+    public int getTotalMaterial() {
+        return newMaterialRepo.findAll().size();
+    }
+
+    @Override
+    public List<NewComplainDto> getComplainTable(String studentId) {
+        return newComplainRepo.findByStudentId(studentId).stream().map(mapper::newComplainToNewComplainDto).toList();
     }
 
     private boolean checkStatus(Student student){

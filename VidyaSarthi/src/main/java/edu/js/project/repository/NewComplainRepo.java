@@ -9,6 +9,6 @@ import java.util.List;
 public interface NewComplainRepo extends JpaRepository<NewComplain, Integer> {
 
     List<NewComplain> findByFacultyId(String facultyId);
-
+    List<NewComplain> findByStudentId(String studentId);
 
 }

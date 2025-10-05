@@ -63,6 +63,7 @@ public class NewMaterialController {
 
     }
 
+
     @PostMapping("/faculty/addNewPYQ")
     public ResponseEntity<?> addPYQ(@RequestParam("materialId") String materialId,
                                     @RequestParam("subjectCode") String subjectCode,

@@ -1,10 +1,8 @@
 package edu.js.project.service;
 
-import edu.js.project.dto.ComplainDto;
-import edu.js.project.dto.FindMaterialDto;
-import edu.js.project.dto.MaterialDto;
-import edu.js.project.dto.SubjectDto;
+import edu.js.project.dto.*;
 import edu.js.project.entity.Complain;
+import edu.js.project.entity.News;
 
 import java.util.List;
 
@@ -17,6 +15,11 @@ public interface StudentService {
     List<MaterialDto> getNotesList(FindMaterialDto findMaterialDto);
     List<MaterialDto> getPYQList(FindMaterialDto findMaterialDto);
     List<MaterialDto> getQBList(FindMaterialDto findMaterialDto);
+    byte[] getStudentPic(String studentId);
 
+    List<News> getNewsAndAnnouncementsList();
 
+    int getTotalMaterial();
+
+    List<NewComplainDto> getComplainTable(String studentId);
 }

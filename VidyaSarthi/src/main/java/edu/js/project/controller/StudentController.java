@@ -5,6 +5,8 @@ import edu.js.project.entity.Complain;
 import edu.js.project.service.StudentService;
 import edu.js.project.service.impl.RegulationMaterialsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,6 +88,64 @@ public class StudentController {
 
         serviceMaterial.addComplain(dto);
         return ResponseEntity.ok("Complain raised successfully");
+
+    }
+
+    @GetMapping(value = "/getPic/{studentId}", produces = { "image/png", "image/jpeg", "application/octet-stream" })
+    public ResponseEntity<byte[]> getFacultyPic(@PathVariable String studentId) {
+        try {
+            byte[] img = service.getStudentPic(studentId); // your service returns raw bytes or throws
+            if (img == null || img.length == 0) {
+                return ResponseEntity.noContent().build(); // 204 - frontend shows placeholder
+            }
+
+            // if you know actual type, use it; otherwise choose a default
+            MediaType mediaType = MediaType.IMAGE_PNG; // or MediaType.IMAGE_JPEG
+
+            return ResponseEntity.ok()
+                    .contentType(mediaType)
+                    .contentLength(img.length)
+                    .body(img);
+        } catch (RuntimeException ex) { // faculty not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/getRegulationList")
+    public ResponseEntity<?> getRegulation() {
+
+        return ResponseEntity.ok(serviceMaterial.getRegulationList());
+
+    }
+
+    @PostMapping("/getNewSubjectList")
+    public ResponseEntity<?> getNewSubjectList(@RequestBody NewSubjectListDto dto) {
+
+
+        SubjectListDto newSubjectList = serviceMaterial.getNewSubjectList(dto);
+        return ResponseEntity.ok(newSubjectList);
+
+
+    }
+
+    @GetMapping("/getAnnouncement")
+    public ResponseEntity<?> getNewAndAnnouncementList(){
+            return ResponseEntity.ok(service.getNewsAndAnnouncementsList());
+    }
+
+    @GetMapping("/getTotalMaterial")
+    public ResponseEntity<?> totalMaterials(){
+
+        return ResponseEntity.ok(service.getTotalMaterial());
+
+    }
+
+    @GetMapping("/getComplainTable/{studentId}")
+    public ResponseEntity<?> getComplainTable(@PathVariable String studentId){
+
+        return ResponseEntity.ok(service.getComplainTable(studentId));
 
     }
 

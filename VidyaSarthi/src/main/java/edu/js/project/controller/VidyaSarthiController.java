@@ -158,7 +158,7 @@ public class VidyaSarthiController {
 //    }
 
 
-    @PostMapping(value = "/updateStudent", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/student/updateStudent", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateStudent(
             @ModelAttribute StudentDto studentDto,                                   // form fields -> DTO
             @RequestParam(value = "photo", required = false) MultipartFile photo     // file input named "photo"
