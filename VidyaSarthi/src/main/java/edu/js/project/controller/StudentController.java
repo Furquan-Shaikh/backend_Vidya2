@@ -92,7 +92,7 @@ public class StudentController {
     }
 
     @GetMapping(value = "/getPic/{studentId}", produces = { "image/png", "image/jpeg", "application/octet-stream" })
-    public ResponseEntity<byte[]> getFacultyPic(@PathVariable String studentId) {
+    public ResponseEntity<byte[]> getStudentPic(@PathVariable String studentId) {
         try {
             byte[] img = service.getStudentPic(studentId); // your service returns raw bytes or throws
             if (img == null || img.length == 0) {

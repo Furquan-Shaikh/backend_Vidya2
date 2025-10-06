@@ -1,5 +1,6 @@
 package edu.js.project.service;
 
+import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.*;
 import edu.js.project.entity.News;
 import edu.js.project.responseStructure.SubCode;
@@ -21,4 +22,7 @@ public interface FacultyService {
     TeacherDto getFacultyInfoByEmail(String email);
     SubjectListDto getNewSubjectList();
     byte[] getFacultyPic(String facultyId);
+
+//    NewTeacher getFacultyById(String facultyId);
+    String getFacultyById(String facultyId);
 }

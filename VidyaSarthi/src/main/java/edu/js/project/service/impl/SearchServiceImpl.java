@@ -1,6 +1,7 @@
 package edu.js.project.service.impl;
 
 import edu.js.project.NewEntities.NewTeacher;
+import edu.js.project.dto.NewTeacherDto;
 import edu.js.project.dto.StudentDto;
 import edu.js.project.dto.TeacherDto;
 import edu.js.project.entity.Student;
@@ -42,9 +43,9 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public TeacherDto searchFacultyByFacultyId(String facultyId) {
-        return teacherRepository.findByFacultyId(facultyId)
-                .map(mapper::teacherToTeacherDto)
+    public NewTeacherDto searchFacultyByFacultyId(String facultyId) {
+        return newTeacherRepo.findByFacultyId(facultyId)
+                .map(mapper::newTeacherToNewTeacherDto)
                 .orElseThrow( () -> new RuntimeException("Faculty not found"));
     }
 

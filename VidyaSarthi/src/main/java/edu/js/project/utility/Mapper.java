@@ -2,6 +2,7 @@ package edu.js.project.utility;
 
 import edu.js.project.NewEntities.NewComplain;
 import edu.js.project.NewEntities.NewMaterial;
+import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.*;
 import edu.js.project.entity.*;
 import org.mapstruct.Mapping;
@@ -22,6 +23,10 @@ public interface Mapper {
     TeacherDto teacherToTeacherDto(Teacher teacher);
 
     StudentDto studentToStudentDto(Student student);
+
+    @Mapping(target = "subjectCodes", ignore = true)
+    @Mapping(target = "materials", ignore = true)
+    NewTeacherDto newTeacherToNewTeacherDto(NewTeacher newTeacher);
 
 
     @Mapping(target = "teacher", source = "teacherDto")

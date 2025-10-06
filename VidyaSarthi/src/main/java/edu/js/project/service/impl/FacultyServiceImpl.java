@@ -26,6 +26,7 @@ public class FacultyServiceImpl implements FacultyService {
     private final SubjectRepository subjectRepository;
     private final UnitRepository unitRepository;
     private final ComplainRepository complainRepository;
+    private final UserRepository userRepository;
     private final NewTeacherRepo newTeacherRepo;
     private final NewMaterialRepo newMaterialRepo;
     private final NewSubjectRepo newSubjectRepo;
@@ -194,6 +195,13 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public byte[] getFacultyPic(String facultyId) {
         return newTeacherRepo.findByFacultyId(facultyId).map(NewTeacher::getImageData).orElseThrow(() -> new RuntimeException("Faculty not found"));
+    }
+
+    @Override
+//    public NewTeacher getFacultyById(String facultyId) {
+    public String getFacultyById(String facultyId) {
+//       return userRepository.findByNewTeacher_FacultyId(facultyId).map(u -> u.getNewTeacher().getName()).orElseThrow(()-> new RuntimeException("User not found"));
+       return userRepository.findByNewTeacher_FacultyId(facultyId).map(u -> u.getNewTeacher().getName()).get();
     }
 
 

@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-10-04T09:05:57+0530",
+    date = "2025-10-06T08:00:22+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.3 (Eclipse Adoptium)"
 )
 @Component
@@ -134,6 +134,33 @@ public class MapperImpl implements Mapper {
         studentDto.semester( student.getSemester() );
 
         return studentDto.build();
+    }
+
+    @Override
+    public NewTeacherDto newTeacherToNewTeacherDto(NewTeacher newTeacher) {
+        if ( newTeacher == null ) {
+            return null;
+        }
+
+        NewTeacherDto.NewTeacherDtoBuilder newTeacherDto = NewTeacherDto.builder();
+
+        newTeacherDto.name( newTeacher.getName() );
+        newTeacherDto.email( newTeacher.getEmail() );
+        newTeacherDto.phone( newTeacher.getPhone() );
+        newTeacherDto.facultyId( newTeacher.getFacultyId() );
+        newTeacherDto.designation( newTeacher.getDesignation() );
+        newTeacherDto.password( newTeacher.getPassword() );
+        newTeacherDto.address( newTeacher.getAddress() );
+        byte[] imageData = newTeacher.getImageData();
+        if ( imageData != null ) {
+            newTeacherDto.imageData( Arrays.copyOf( imageData, imageData.length ) );
+        }
+        Set<NewSubject> set = newTeacher.getSubjects();
+        if ( set != null ) {
+            newTeacherDto.subjects( new LinkedHashSet<NewSubject>( set ) );
+        }
+
+        return newTeacherDto.build();
     }
 
     @Override
@@ -391,36 +418,6 @@ public class MapperImpl implements Mapper {
         }
 
         return newComplainDto.build();
-    }
-
-    protected NewTeacherDto newTeacherToNewTeacherDto(NewTeacher newTeacher) {
-        if ( newTeacher == null ) {
-            return null;
-        }
-
-        NewTeacherDto.NewTeacherDtoBuilder newTeacherDto = NewTeacherDto.builder();
-
-        newTeacherDto.name( newTeacher.getName() );
-        newTeacherDto.email( newTeacher.getEmail() );
-        newTeacherDto.phone( newTeacher.getPhone() );
-        newTeacherDto.facultyId( newTeacher.getFacultyId() );
-        newTeacherDto.designation( newTeacher.getDesignation() );
-        newTeacherDto.password( newTeacher.getPassword() );
-        newTeacherDto.address( newTeacher.getAddress() );
-        byte[] imageData = newTeacher.getImageData();
-        if ( imageData != null ) {
-            newTeacherDto.imageData( Arrays.copyOf( imageData, imageData.length ) );
-        }
-        Set<NewSubject> set = newTeacher.getSubjects();
-        if ( set != null ) {
-            newTeacherDto.subjects( new LinkedHashSet<NewSubject>( set ) );
-        }
-        Set<NewMaterial> set1 = newTeacher.getMaterials();
-        if ( set1 != null ) {
-            newTeacherDto.materials( new LinkedHashSet<NewMaterial>( set1 ) );
-        }
-
-        return newTeacherDto.build();
     }
 
     protected UnitDto unitToUnitDto(Unit unit) {

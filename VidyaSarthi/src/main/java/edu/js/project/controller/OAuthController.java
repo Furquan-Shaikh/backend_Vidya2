@@ -28,7 +28,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/VidyaSarthi")
-@CrossOrigin
+
 public class OAuthController {
 
     @Autowired

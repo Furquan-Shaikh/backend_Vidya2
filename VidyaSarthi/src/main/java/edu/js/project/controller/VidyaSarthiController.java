@@ -1,10 +1,13 @@
 package edu.js.project.controller;
 
+import edu.js.project.NewEntities.NewSubject;
+import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.*;
 import edu.js.project.entity.AdminClg;
 import edu.js.project.entity.Base;
 import edu.js.project.entity.Student;
 import edu.js.project.entity.Teacher;
+import edu.js.project.repository.NewTeacherRepo;
 import edu.js.project.repository.StudentRepository;
 import edu.js.project.repository.TeacherRepository;
 import edu.js.project.service.UserService;
@@ -23,13 +26,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/VidyaSarthi")
-@CrossOrigin(origins = "http://localhost:5173")
 public class VidyaSarthiController {
 
     private final UserService service;
     private final Mapper mapper;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final NewTeacherRepo newTeacherRepo;
 
 
     @PostMapping("/login")
@@ -122,14 +125,14 @@ public class VidyaSarthiController {
     }
 
     @PostMapping("/searchTeacherByFilter")
-    public List<Teacher> searchTeacher(@RequestBody FacultyFilterDto filter) {
+    public List<NewTeacher> searchTeacher(@RequestBody FacultyFilterDto filter) {
         List<String> designation = (filter.getDesignation() == null || filter.getDesignation().isEmpty())
                 ? null : filter.getDesignation();
 
         List<String> subjects = (filter.getSubject() == null || filter.getSubject().isEmpty())
                 ? null : filter.getSubject();
 
-        return teacherRepository.findFacultiesByFilters(designation, subjects);
+        return newTeacherRepo.findFacultiesByFilters(designation, subjects);
 
     }
 
@@ -184,6 +187,26 @@ public class VidyaSarthiController {
         System.out.println("I am inside add admin");
         service.addAdmin();
         return ResponseEntity.ok("Admin Added Successfully");
+
+    }
+
+    @GetMapping("/getFacultyListWithSubject")
+    public ResponseEntity<?> getFacultyListWithSubject(){
+
+        List<FacultyListWithSubject> list = newTeacherRepo.findAll().stream().map(data -> {
+
+            return FacultyListWithSubject.builder()
+                    .email(data.getEmail())
+                    .facultyId(data.getFacultyId())
+                    .designation(data.getDesignation())
+                    .name(data.getName())
+                    .subjects(data.getSubjects().stream().map(NewSubject::getName).toList())
+                    .build();
+
+
+        }).toList();
+
+        return ResponseEntity.ok(list);
 
     }
 

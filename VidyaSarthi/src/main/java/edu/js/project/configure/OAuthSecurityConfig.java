@@ -419,8 +419,23 @@ public class OAuthSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // ** CRITICAL: Set the exact origin of your frontend **
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        // 1. CRITICAL CHANGE: Use a specific port AND the pattern for any port on localhost
+        // Note: The [*] pattern works well in WebMvcConfigurer, but for CorsConfigurationSource,
+        // the safest and most compliant way to allow any port on localhost is to use the wildcard
+        // for development ONLY, or list all expected ports. For maximum flexibility, let's use the wildcard.
+
+        // **For development with any port on localhost: Use this**
+        config.setAllowedOriginPatterns(List.of("http://localhost:[*]", "http://127.0.0.1:5500"));
+
+        // **Alternatively, for simplicity and high compatibility, use the universal wildcard in development**
+        // config.setAllowedOrigins(List.of("*")); // Only use this if you DON'T need credentials
+
+        // You were using allowedOrigins:
+        // config.setAllowedOrigins(List.of("http://localhost:5173")); // TOO RESTRICTIVE
+
+        // Use allowedOriginPatterns for port flexibility
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5500", "http://localhost:[*]"));
+
 
         // Allow all necessary methods, especially OPTIONS for preflight
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
@@ -428,8 +443,11 @@ public class OAuthSecurityConfig {
         // Allow all headers
         config.setAllowedHeaders(List.of("*"));
 
-        // Allow credentials (necessary if you send cookies/auth headers)
+        // Allow credentials (important for cookies/JWTs in headers)
         config.setAllowCredentials(true);
+
+        // Set max age for preflight cache
+        config.setMaxAge(3600L);
 
         // Apply the configuration to all paths
         source.registerCorsConfiguration("/**", config);

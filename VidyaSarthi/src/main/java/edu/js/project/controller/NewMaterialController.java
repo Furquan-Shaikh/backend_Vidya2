@@ -3,6 +3,7 @@ package edu.js.project.controller;
 import edu.js.project.NewEntities.NewMaterial;
 import edu.js.project.dto.*;
 import edu.js.project.repository.NewRegulationRepo;
+import edu.js.project.service.FacultyService;
 import edu.js.project.service.impl.RegulationMaterialsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -23,6 +24,7 @@ import java.util.List;
 public class NewMaterialController {
 
     private final RegulationMaterialsImpl service;
+    private final FacultyService facultyService;
 
     @PostMapping("/addNewRegulation")
     public ResponseEntity<?> addRegulation(@RequestBody NewRegulationDto newRegulationDto) {
@@ -197,6 +199,13 @@ public class NewMaterialController {
         service.editMaterial(materialId, pdf);
 
         return ResponseEntity.ok("Material edited successfully");
+
+    }
+
+    @GetMapping("/getFacultyById/{facultyId}")
+    public ResponseEntity<?>getFacultyById(@PathVariable String facultyId){
+
+        return ResponseEntity.ok( facultyService.getFacultyById(facultyId));
 
     }
 

@@ -1,5 +1,6 @@
 package edu.js.project.controller;
 
+import edu.js.project.dto.NewTeacherDto;
 import edu.js.project.dto.StudentDto;
 import edu.js.project.dto.TeacherDto;
 import edu.js.project.service.SearchService;
@@ -41,7 +42,7 @@ public class GetDataController {
     @GetMapping("/searchByFacultyId/{facultyId}")
     public ResponseEntity<?> searchFacultyByFacultyId(@PathVariable String facultyId){
 
-        TeacherDto teacherDto = service.searchFacultyByFacultyId(facultyId);
+        NewTeacherDto teacherDto = service.searchFacultyByFacultyId(facultyId);
         return ResponseEntity.ok(teacherDto);
 
     }
