@@ -39,5 +39,7 @@ public interface UserRepository extends JpaRepository<Users,Long> {
 //    Optional<NewTeacher> findUserByFacultyId(@Param("facultyId") String facultyId);
     Optional<Users> findByNewTeacher_FacultyId(@Param("facultyId") String facultyId);
 
+    boolean existsByEmail(String email);
+
 
 }

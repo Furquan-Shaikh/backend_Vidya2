@@ -459,5 +459,48 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public boolean isUserExists(String email) {
+        // Check if user exists by email
+        // This assumes you have a method in your repository
+        return userRepository.existsByEmail(email);
+        // Or if checking by username:
+        // return userRepository.existsByUsername(email);
+    }
+
+    @Transactional
+    @Override
+    public boolean resetPassword(String email, String newPassword) {
+        Users user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        String encoded = encode.encode(newPassword);
+        user.setPassword(encoded);
+        userRepository.save(user);
+
+        // Also keep copies in related entities (student/teacher/admin) in sync if you store password there
+        if (user.getStudent() != null) {
+            Student s = user.getStudent();
+            s.setPassword(encoded);
+            studentRepository.save(s);
+        }
+        if (user.getTeacher() != null) {
+            Teacher t = user.getTeacher();
+            // if Teacher entity has password field, update it - if not, ignore
+            try {
+                t.setPassword(encoded);
+                teacherRepository.save(t);
+            } catch (Exception ignored) {}
+        }
+//        if (user.getAdminClg() != null) {
+//            AdminClg a = user.getAdminClg();
+//            try {
+//                a.setPassword(encoded);
+//                adminRepository.save(a);
+//            } catch (Exception ignored) {}
+//        }
+
+        return true;
+    }
+
+
 
 }

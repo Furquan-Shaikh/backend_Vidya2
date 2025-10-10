@@ -24,6 +24,9 @@ public interface UserService {
     public void addMaterial(MaterialDto dto, String subCode, String facultyId, String unitCode);
     public boolean addUserToDB(StudentDto req);
     public UsersDto getUserDetail(String email);
+    boolean isUserExists(String email);
+    boolean resetPassword(String email, String newPassword);
+
 
 
 

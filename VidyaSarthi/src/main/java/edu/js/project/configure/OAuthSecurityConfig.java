@@ -379,29 +379,91 @@ public class OAuthSecurityConfig {
     /**
      * Defines the primary security filter chain, now including global CORS configuration.
      */
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity
+//                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                // 1. **ENABLE CORS:** Configure CORS using the custom source bean
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(req -> req
+//                        // 2. **ALLOW OPTIONS (Preflight):** Ensure all OPTIONS requests bypass authentication
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/VidyaSarthi/loginAcc", "/VidyaSarthi/signUpAcc").permitAll()
+//                        .requestMatchers( "/VidyaSarthi/addFaculty",
+//                                 "/VidyaSarthi/searchTeacherByFilter", "/VidyaSarthi/searchStudentByFilter",
+//                                "/VidyaSarthi/addStudent", "/VidyaSarthi/facultyList", "/VidyaSarthi/studentList"
+//                                , "/VidyaSarthi/deleteFaculty/**", "/VidyaSarthi/deleteStudent/**",
+//                                 "/VidyaSarthi/addRegulation/**",
+//                                "/VidyaSarthi/addNewRegulation","/VidyaSarthi/addNewTeacher").hasAuthority("Admin")
+//                        .requestMatchers("/VidyaSarthi/faculty/**", "/faculty/VidyaSarthi/getFacultyDetail").hasAuthority("Faculty")
+//                        .requestMatchers("/VidyaSarthi/student/**").hasAuthority("Student")
+//                        .requestMatchers("/VidyaSarthi/addAdmin").permitAll()
+////                                .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**",
+////                                "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId","/VidyaSarthi/addAdmin").permitAll()
+//                        .requestMatchers("/VidyaSarthi/logoutAcc").authenticated()
+//                        .anyRequest().authenticated()
+//                )
+//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(
+//                        jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+//                ))
+//                .build();
+//    }
+
+    // Update the security configuration in OAuthSecurityConfig.java
+// Add these endpoints to the permitAll list in the securityFilterChain method:
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 1. **ENABLE CORS:** Configure CORS using the custom source bean
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        // 2. **ALLOW OPTIONS (Preflight):** Ensure all OPTIONS requests bypass authentication
+                        // Allow OPTIONS (Preflight)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/VidyaSarthi/loginAcc", "/VidyaSarthi/signUpAcc").permitAll()
-                        .requestMatchers( "/VidyaSarthi/addFaculty",
-                                 "/VidyaSarthi/searchTeacherByFilter", "/VidyaSarthi/searchStudentByFilter",
-                                "/VidyaSarthi/addStudent", "/VidyaSarthi/facultyList", "/VidyaSarthi/studentList"
-                                , "/VidyaSarthi/deleteFaculty/**", "/VidyaSarthi/deleteStudent/**",
-                                 "/VidyaSarthi/addRegulation/**",
-                                "/VidyaSarthi/addNewRegulation","/VidyaSarthi/addNewTeacher").hasAuthority("Admin")
-                        .requestMatchers("/VidyaSarthi/faculty/**", "/faculty/VidyaSarthi/getFacultyDetail").hasAuthority("Faculty")
+
+                        // Allow authentication and signup endpoints including OTP
+                        .requestMatchers(HttpMethod.POST,
+                                "/VidyaSarthi/loginAcc",
+                                "/VidyaSarthi/signUpAcc",
+                                "/VidyaSarthi/initiateSignup",     // New OTP endpoint
+                                "/VidyaSarthi/verifyOtpAndSignup", // New OTP endpoint
+                                "/VidyaSarthi/resendOtp",           // New OTP endpoint
+                                "/VidyaSarthi/initiateForgotPassword",
+                                "/VidyaSarthi/verifyForgotOtpAndReset",
+                                "/VidyaSarthi/resendForgotOtp"
+                        ).permitAll()
+
+                        // Admin endpoints
+                        .requestMatchers("/VidyaSarthi/addFaculty",
+                                "/VidyaSarthi/searchTeacherByFilter",
+                                "/VidyaSarthi/searchStudentByFilter",
+                                "/VidyaSarthi/addStudent",
+                                "/VidyaSarthi/facultyList",
+                                "/VidyaSarthi/studentList",
+                                "/VidyaSarthi/deleteFaculty/**",
+                                "/VidyaSarthi/deleteStudent/**",
+                                "/VidyaSarthi/addRegulation/**",
+                                "/VidyaSarthi/addNewRegulation",
+                                "/VidyaSarthi/addNewTeacher"
+                        ).hasAuthority("Admin")
+
+                        // Faculty endpoints
+                        .requestMatchers("/VidyaSarthi/faculty/**",
+                                "/faculty/VidyaSarthi/getFacultyDetail"
+                        ).hasAuthority("Faculty")
+
+                        // Student endpoints
                         .requestMatchers("/VidyaSarthi/student/**").hasAuthority("Student")
+
+                        // Other permitted endpoints
                         .requestMatchers("/VidyaSarthi/addAdmin").permitAll()
-//                                .requestMatchers("/VidyaSarthi/getMaterial/**","/VidyaSarthi/getMaterialList/**",
-//                                "/VidyaSarthi/getMaterialListPYQ/**", "/VidyaSarthi/getMaterialListQB/**", "/VidyaSarthi/getMaterialListNOTES/**","/VidyaSarthi/getFacultyId","/VidyaSarthi/addAdmin").permitAll()
+
+                        // Logout endpoint (requires authentication)
                         .requestMatchers("/VidyaSarthi/logoutAcc").authenticated()
+
+                        // All other requests require authentication
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(
