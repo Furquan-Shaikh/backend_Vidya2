@@ -149,4 +149,11 @@ public class StudentController {
 
     }
 
+    @GetMapping("/getFacultyIdByMaterialId/{materialId}")
+    public ResponseEntity<String> getFacultyIdByMaterialId(@PathVariable String materialId){
+
+        return ResponseEntity.ok(serviceMaterial.getMaterialFacultyDetail(materialId));
+
+    }
+
 }

@@ -17,4 +17,6 @@ public interface RegulationMaterials {
     List<NewComplainDto> getAllComplains(String facultyId);
 
     void updateComplain(UpdatedStatusDto updatedStatus);
+
+    String getMaterialFacultyDetail(String materialId);
 }

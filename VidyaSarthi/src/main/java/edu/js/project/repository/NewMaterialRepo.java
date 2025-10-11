@@ -20,4 +20,7 @@ public interface NewMaterialRepo extends JpaRepository< NewMaterial,Integer> {
 
     List<NewMaterial> findByFacultyId(String facultyId);
 
+    @Query("select f.facultyId from NewMaterial f where f.materialId = :materialId ")
+    String findFacultyIdByMaterialId(@Param("materialId") String materialId);
+
 }

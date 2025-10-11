@@ -133,6 +133,11 @@ public class RegulationMaterialsImpl implements RegulationMaterials {
 
     }
 
+    @Override
+    public String getMaterialFacultyDetail(String materialId) {
+        return newMaterialRepo.findFacultyIdByMaterialId(materialId);
+    }
+
     @Transactional
     @Modifying
     public void addRegulation(NewRegulationDto dto) {
