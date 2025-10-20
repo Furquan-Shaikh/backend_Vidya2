@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final NewTeacherRepo newTeacherRepo;
     private final NewSubjectRepo newSubjectRepo;
     private final PasswordEncoder encode;
+    private final NewsRepository newsRepository;
 
     private final Mapper mapper;
 
@@ -501,6 +502,14 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public List<NewsDto> getNewList() {
+        return newsRepository.findAll().stream().map(news -> {
+            NewsDto newsDto = mapper.newsToNewsDto(news);
+            newsDto.setFacultyName(news.getTeacher().getName());
+            return newsDto;
+        }).toList();
+    }
 
 
 }

@@ -72,4 +72,7 @@ public interface Mapper {
     NewComplain newComplainDtoToNewComplain(NewComplainDto newComplainDto);
     NewComplainDto newComplainToNewComplainDto(NewComplain newComplain);
 
+    @Mapping(target = "facultyName", ignore = true)
+    NewsDto newsToNewsDto(News news);
+
 }

@@ -1,5 +1,6 @@
 package edu.js.project.service.impl;
 
+import edu.js.project.NewEntities.NewRegulation;
 import edu.js.project.NewEntities.NewSubject;
 import edu.js.project.NewEntities.NewTeacher;
 import edu.js.project.dto.*;
@@ -30,6 +31,8 @@ public class FacultyServiceImpl implements FacultyService {
     private final NewTeacherRepo newTeacherRepo;
     private final NewMaterialRepo newMaterialRepo;
     private final NewSubjectRepo newSubjectRepo;
+    private final StudentRepository studentRepository;
+    private final NewRegulationRepo newRegulationRepo;
 
     public boolean checkFacultyStatus(String facultyId) {
 
@@ -203,6 +206,20 @@ public class FacultyServiceImpl implements FacultyService {
 //       return userRepository.findByNewTeacher_FacultyId(facultyId).map(u -> u.getNewTeacher().getName()).orElseThrow(()-> new RuntimeException("User not found"));
        return userRepository.findByNewTeacher_FacultyId(facultyId).map(u -> u.getNewTeacher().getName()).get();
     }
+
+    @Override
+    public List<StudentDto> getStudentList(String facultyId) {
+        Set<NewSubject> subjectList = newTeacherRepo.findByFacultyId(facultyId).map(NewTeacher::getSubjects).orElseThrow(() -> new RuntimeException("Faculty not found"));
+        HashSet<String> regulationId = new HashSet<>(subjectList.stream().map(NewSubject::getRegulationId).toList());
+        // If the set is empty, return an empty list to avoid an unnecessary query
+        if (regulationId.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+        Set<String> collect = newRegulationRepo.findByRegulationIdIn(regulationId).stream().map(NewRegulation::getName).collect(Collectors.toSet());
+        // Call the new repository method
+        return studentRepository.findByRegulationIn(collect).stream().map(mapper::studentToStudentDto).toList();
+    }
+
 
 
     private boolean checkStatus(NewTeacher teacher) {

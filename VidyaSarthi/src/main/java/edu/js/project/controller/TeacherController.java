@@ -169,6 +169,13 @@ public class TeacherController {
         }
     }
 
+    @GetMapping("/getFacultyStudent/{facultyId}")
+    public ResponseEntity<?>getStudentList(@PathVariable("facultyId") String facultyId){
+
+        return ResponseEntity.ok(service.getStudentList(facultyId));
+
+    }
+
 
 
 }

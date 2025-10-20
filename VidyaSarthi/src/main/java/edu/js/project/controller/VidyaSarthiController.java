@@ -210,5 +210,9 @@ public class VidyaSarthiController {
 
     }
 
+    @GetMapping("/getNewsList")
+    public ResponseEntity<?> getNewsList(){
+        return ResponseEntity.ok(service.getNewList());
+    }
 
 }

@@ -23,4 +23,8 @@ public interface NewMaterialRepo extends JpaRepository< NewMaterial,Integer> {
     @Query("select f.facultyId from NewMaterial f where f.materialId = :materialId ")
     String findFacultyIdByMaterialId(@Param("materialId") String materialId);
 
+    // Counts materials by type
+    @Query("SELECT m.materialType, COUNT(m) FROM NewMaterial m GROUP BY m.materialType")
+    List<Object[]> countMaterialsByType();
+
 }

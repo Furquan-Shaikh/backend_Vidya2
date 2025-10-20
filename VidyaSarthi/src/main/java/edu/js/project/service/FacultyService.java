@@ -25,4 +25,6 @@ public interface FacultyService {
 
 //    NewTeacher getFacultyById(String facultyId);
     String getFacultyById(String facultyId);
+
+    List<StudentDto> getStudentList(String facultyId);
 }

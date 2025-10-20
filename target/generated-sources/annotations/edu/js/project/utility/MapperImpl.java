@@ -11,6 +11,7 @@ import edu.js.project.dto.MaterialDto;
 import edu.js.project.dto.NewComplainDto;
 import edu.js.project.dto.NewMaterialDto;
 import edu.js.project.dto.NewTeacherDto;
+import edu.js.project.dto.NewsDto;
 import edu.js.project.dto.SemesterDto;
 import edu.js.project.dto.StudentDto;
 import edu.js.project.dto.SubjectDto;
@@ -21,6 +22,7 @@ import edu.js.project.entity.AdminClg;
 import edu.js.project.entity.Branch;
 import edu.js.project.entity.Complain;
 import edu.js.project.entity.Material;
+import edu.js.project.entity.News;
 import edu.js.project.entity.Semester;
 import edu.js.project.entity.Student;
 import edu.js.project.entity.Subject;
@@ -37,7 +39,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-10-09T08:38:09+0530",
+    date = "2025-10-20T23:40:38+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.3 (Eclipse Adoptium)"
 )
 @Component
@@ -418,6 +420,22 @@ public class MapperImpl implements Mapper {
         }
 
         return newComplainDto.build();
+    }
+
+    @Override
+    public NewsDto newsToNewsDto(News news) {
+        if ( news == null ) {
+            return null;
+        }
+
+        NewsDto.NewsDtoBuilder newsDto = NewsDto.builder();
+
+        newsDto.id( news.getId() );
+        newsDto.type( news.getType() );
+        newsDto.describeEvents( news.getDescribeEvents() );
+        newsDto.publishDateTime( news.getPublishDateTime() );
+
+        return newsDto.build();
     }
 
     protected UnitDto unitToUnitDto(Unit unit) {

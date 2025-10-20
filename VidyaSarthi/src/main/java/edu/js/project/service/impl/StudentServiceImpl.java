@@ -55,11 +55,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public int getCurrentSemester(String studentId) {
 
-        String s = studentRepository.findByStudentId(studentId).map(Student::getSemester).orElseThrow(
-                () -> new RuntimeException("Student not found")
+        Student student = studentRepository.findByStudentId(studentId).orElseThrow(
+                () -> new RuntimeException("Student not found22222222")
         );
-        char c = s.charAt(0);
-        return (c - '0');
+        String s = student.getSemester();
+        if(Objects.nonNull(s)) {
+            char c = s.charAt(0);
+            return (c - '0');
+        }else
+            return 0;
 
     }
 

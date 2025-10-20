@@ -432,7 +432,8 @@ public class OAuthSecurityConfig {
                                 "/VidyaSarthi/resendOtp",           // New OTP endpoint
                                 "/VidyaSarthi/initiateForgotPassword",
                                 "/VidyaSarthi/verifyForgotOtpAndReset",
-                                "/VidyaSarthi/resendForgotOtp"
+                                "/VidyaSarthi/resendForgotOtp",
+                                "/VidyaSarthi/log-visit"
                         ).permitAll()
 
                         // Admin endpoints
@@ -446,7 +447,8 @@ public class OAuthSecurityConfig {
                                 "/VidyaSarthi/deleteStudent/**",
                                 "/VidyaSarthi/addRegulation/**",
                                 "/VidyaSarthi/addNewRegulation",
-                                "/VidyaSarthi/addNewTeacher"
+                                "/VidyaSarthi/addNewTeacher",
+                                "/VidyaSarthi/admin/dashboard-analytics"
                         ).hasAuthority("Admin")
 
                         // Faculty endpoints
@@ -458,7 +460,7 @@ public class OAuthSecurityConfig {
                         .requestMatchers("/VidyaSarthi/student/**").hasAuthority("Student")
 
                         // Other permitted endpoints
-                        .requestMatchers("/VidyaSarthi/addAdmin").permitAll()
+                        .requestMatchers("/VidyaSarthi/addAdmin","/VidyaSarthi/getNewsList").permitAll()
 
                         // Logout endpoint (requires authentication)
                         .requestMatchers("/VidyaSarthi/logoutAcc").authenticated()

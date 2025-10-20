@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface StudentRepository extends JpaRepository<Student,Long> {
 
@@ -23,5 +24,6 @@ public interface StudentRepository extends JpaRepository<Student,Long> {
     );
 
     Optional<Student>findByStudentId(String studentId);
+    List<Student> findByRegulationIn(Set<String> regulations);
 
 }

@@ -36,7 +36,7 @@ public class SearchServiceImpl implements SearchService {
     public StudentDto searchStudentByStudentId(String studentId) {
 
         Student student = studentRepository.findByStudentId(studentId).orElseThrow(
-                () -> new RuntimeException("Student not found")
+                () -> new RuntimeException("Student not found11111")
         );
          return mapper.studentToStudentDto(student);
 

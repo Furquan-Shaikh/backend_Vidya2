@@ -28,7 +28,5 @@ public interface UserService {
     boolean resetPassword(String email, String newPassword);
 
 
-
-
-
+    List<NewsDto> getNewList();
 }
