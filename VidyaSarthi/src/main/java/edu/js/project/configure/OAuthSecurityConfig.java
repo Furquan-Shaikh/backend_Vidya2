@@ -448,7 +448,9 @@ public class OAuthSecurityConfig {
                                 "/VidyaSarthi/addRegulation/**",
                                 "/VidyaSarthi/addNewRegulation",
                                 "/VidyaSarthi/addNewTeacher",
-                                "/VidyaSarthi/admin/dashboard-analytics"
+                                "/VidyaSarthi/admin/dashboard-analytics",
+                                "/VidyaSarthi/admin/analytics/**",
+                                "/VidyaSarthi/admin/reviews/**"
                         ).hasAuthority("Admin")
 
                         // Faculty endpoints
@@ -457,7 +459,9 @@ public class OAuthSecurityConfig {
                         ).hasAuthority("Faculty")
 
                         // Student endpoints
-                        .requestMatchers("/VidyaSarthi/student/**").hasAuthority("Student")
+                        .requestMatchers("/VidyaSarthi/student/**",
+                                "/VidyaSarthi/student/exit-survey",
+                                "/VidyaSarthi/student/exit-survey/status").hasAuthority("Student")
 
                         // Other permitted endpoints
                         .requestMatchers("/VidyaSarthi/addAdmin","/VidyaSarthi/getNewsList").permitAll()
